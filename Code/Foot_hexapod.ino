@@ -23,7 +23,12 @@ void setup() {
 }
 
 void loop() {
-  servo_coxa1.write(poz_coxa1);
+  /*servo_coxa1.write(poz_coxa1);
   servo_femur1.write(poz_femur1);
   servo_tibie1.write(poz_tibie1);
+  */
+
+  servo_coxa1.write(poz_coxa_initial);
+  servo_femur1.write(poz_femur_initial);
+  servo_tibie1.write(poz_tibie_initial);
 }

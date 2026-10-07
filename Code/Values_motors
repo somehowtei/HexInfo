@@ -1,6 +1,6 @@
 hip- set to 90 degrees for normal position
-  can have values from (0,180)
+  can have values between (0,180)
 femur- set to 180 degrees for normal position
-  can have values from (180,145)
+  can have values between (180,145)
 tibia- set to 180 degrees for normal position
-  can have values from (180,125)
+  can have values between (180,125)

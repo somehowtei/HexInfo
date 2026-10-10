@@ -6,9 +6,9 @@ int PinLeftFrontLeg1_Foot=4;
 Servo ServoLeftFrontLeg1_Hip;
 Servo ServoLeftFrontLeg1_Knee;
 Servo ServoLeftFrontLeg1_Foot;
-int LeftFrontLeg1_Hip=90; //90
-int LeftFrontLeg1_Knee; //180
-int LeftFrontLeg1_Foot; //180
+float LeftFrontLeg1_Hip=90; //90
+float LeftFrontLeg1_Knee; //180
+float LeftFrontLeg1_Foot; //180
 float Thigh_length=47;
 float Foot_length=43;
 float Knee_angle;

@@ -1,11 +1,14 @@
 #include <math.h>
 #include <Servo.h>
+
 int PinRightFrontLeg1_Hip=2;
 int PinRightFrontLeg1_Knee=3;
 int PinRightFrontLeg1_Foot=4;
+
 Servo ServoRightFrontLeg1_Hip;
 Servo ServoRightFrontLeg1_Knee;
 Servo ServoRightFrontLeg1_Foot;
+
 float RightFrontLeg1_Hip=90; //90
 float RightFrontLeg1_Knee; //180
 float RightFrontLeg1_Foot; //180
@@ -19,6 +22,7 @@ float y=45;
 float z=55;
 float l;
 const float rad_to_degree=180.0/PI;
+
 void setup() {
   Serial.begin(9600);
   ServoRightFrontLeg1_Hip.attach(PinRightFrontLeg1_Hip);

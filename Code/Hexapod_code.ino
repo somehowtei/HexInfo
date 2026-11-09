@@ -40,11 +40,11 @@ struct HipState
 HipState hip[6]= // from 0 to 5
 {
   {90,1,0}, //foot 1-left  0
-  {90,1,0}, //foot 2-left  1
+  {90,-1,0}, //foot 2-left  1
   {90,1,0}, //foot 3-left  2
-  {90,1,0}, //foot 1-right  3
+  {90,-1,0}, //foot 1-right  3
   {90,1,0}, //foot 2-right  4
-  {90,1,0} //foot 3-right  5
+  {90,-1,0} //foot 3-right  5
 };
 
 void SetAngle(Adafruit_PWMServoDriver &pwm, int channel, float angle)
@@ -56,7 +56,7 @@ void SetAngle(Adafruit_PWMServoDriver &pwm, int channel, float angle)
 
 void MoveHip(Adafruit_PWMServoDriver &pwm, int channel, HipState &hip)
 {
-  if(millis()-hip.LastUpdate>=15)
+  if(millis()-hip.LastUpdate>=1)
   {
     hip.LastUpdate=millis();
     hip.angle=hip.angle+hip.direction;
@@ -110,6 +110,42 @@ void Position2(Adafruit_PWMServoDriver &pwm, int chKnee, int chFoot) //position 
   SetAngle(pwm, chFoot, Foot_angle);
 } 
 
+void Position3(Adafruit_PWMServoDriver &pwm, int chKnee, int chFoot) //position 1 for left legs
+{
+  float Va_angle;
+  float Vb_angle;
+  float Knee_angle;
+  float Foot_angle;
+  float l;
+  float y=45;
+  float z=55;
+  l=sqrt(pow(y,2)+pow(z,2));
+  Foot_angle=acos((pow(Thigh_length,2)+pow(Foot_length,2)-pow(l,2))/(2*Thigh_length*Foot_length))*rad_to_degree;
+  Vb_angle=acos((pow(l,2)+pow(Thigh_length,2)-pow(Foot_length,2))/(2*l*Thigh_length))*rad_to_degree;
+  Va_angle=atan(z/y)*rad_to_degree;
+  Knee_angle=180-(Va_angle-Vb_angle);
+  SetAngle(pwm, chKnee, Knee_angle);
+  SetAngle(pwm, chFoot, Foot_angle);
+} 
+
+void Position4(Adafruit_PWMServoDriver &pwm, int chKnee, int chFoot) //position 2 for left legs, HORIZONTAL position
+{
+  float Va_angle;
+  float Vb_angle;
+  float Knee_angle;
+  float Foot_angle;
+  float l;
+  float y=Thigh_length+Foot_length;
+  float z=0;
+  l=sqrt(pow(y,2)+pow(z,2));
+  Foot_angle=acos((pow(Thigh_length,2)+pow(Foot_length,2)-pow(l,2))/(2*Thigh_length*Foot_length))*rad_to_degree;
+  Vb_angle=acos((pow(l,2)+pow(Thigh_length,2)-pow(Foot_length,2))/(2*l*Thigh_length))*rad_to_degree;
+  Va_angle=atan(z/y)*rad_to_degree;
+  Knee_angle=180-(Va_angle-Vb_angle);
+  SetAngle(pwm, chKnee, Knee_angle);
+  SetAngle(pwm, chFoot, Foot_angle);
+} 
+
 void setup() 
 {
   Wire.begin();
@@ -130,5 +166,51 @@ void loop()
   if(hip[0].direction==-1)
   {
     Position2(PWM_left, chLeftLeg1_Knee, chLeftLeg1_Foot);
+  }
+  MoveHip(PWM_left, chLeftLeg2_Hip, hip[1]);
+  if(hip[1].direction==-1)
+  {
+    Position2(PWM_left, chLeftLeg2_Knee, chLeftLeg2_Foot);
+  }
+  if(hip[1].direction==1)
+  {
+    Position1(PWM_left, chLeftLeg2_Knee, chLeftLeg2_Foot);
+  }
+  MoveHip(PWM_left, chLeftLeg3_Hip, hip[2]);
+  if(hip[2].direction==1)
+  {
+    Position1(PWM_left, chLeftLeg3_Knee, chLeftLeg3_Foot);
+  }
+  if(hip[2].direction==-1)
+  {
+    Position2(PWM_right, chRightLeg3_Knee, chRightLeg3_Foot);
+  }
+  
+  MoveHip(PWM_right, chRightLeg1_Hip, hip[3]);
+  if(hip[3].direction==1)
+  {
+    Position4(PWM_right, chRightLeg1_Knee, chRightLeg1_Foot);
+  }
+  if(hip[3].direction==-1)
+  {
+    Position3(PWM_right, chRightLeg1_Knee, chRightLeg1_Foot);
+  }
+  MoveHip(PWM_right, chRightLeg2_Hip, hip[4]);
+  if(hip[4].direction==-1)
+  {
+    Position3(PWM_right, chRightLeg2_Knee, chRightLeg2_Foot);
+  }
+  if(hip[4].direction==1)
+  {
+    Position4(PWM_right, chRightLeg2_Knee, chRightLeg2_Foot);
+  }
+  MoveHip(PWM_right, chRightLeg3_Hip, hip[5]);
+  if(hip[5].direction==1)
+  {
+    Position4(PWM_right, chRightLeg3_Knee, chRightLeg3_Foot);
+  }
+  if(hip[5].direction==-1)
+  {
+    Position3(PWM_right, chRightLeg3_Knee, chRightLeg3_Foot);
   }
 }

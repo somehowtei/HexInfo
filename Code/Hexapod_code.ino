@@ -37,20 +37,20 @@ struct HipState
   unsigned long LastUpdate;
 };
 
-HipState hip[6]=
+HipState hip[6]= // from 0 to 5
 {
-  {90,1,0}, //foot 1-left
-  {90,1,0}, //foot 2-left
-  {90,1,0}, //foot 3-left
-  {90,1,0}, //foot 1-right
-  {90,1,0}, //foot 2-right
-  {90,1,0} //foot 3-right
+  {90,1,0}, //foot 1-left  0
+  {90,1,0}, //foot 2-left  1
+  {90,1,0}, //foot 3-left  2
+  {90,1,0}, //foot 1-right  3
+  {90,1,0}, //foot 2-right  4
+  {90,1,0} //foot 3-right  5
 };
 
 void SetAngle(Adafruit_PWMServoDriver &pwm, int channel, float angle)
 {
   angle=constrain(angle, 0, 180);
-  int pulse=1000+(angle/180)*1000; //modificam in functie de motor
+  int pulse=1000+(angle/180)*1500; //modificam in functie de motor: 1500
   pwm.writeMicroseconds(channel, pulse);
 }
 
@@ -74,7 +74,7 @@ void MoveHip(Adafruit_PWMServoDriver &pwm, int channel, HipState &hip)
   }
 }
 
-void Position1(Adafruit_PWMServoDriver &pwm, int chKnee, int chFoot) 
+void Position1(Adafruit_PWMServoDriver &pwm, int chKnee, int chFoot) //position 1 for left legs
 {
   float Va_angle;
   float Vb_angle;
@@ -92,7 +92,7 @@ void Position1(Adafruit_PWMServoDriver &pwm, int chKnee, int chFoot)
   SetAngle(pwm, chFoot, Foot_angle);
 } 
 
-void Position2(Adafruit_PWMServoDriver &pwm, int chKnee, int chFoot) 
+void Position2(Adafruit_PWMServoDriver &pwm, int chKnee, int chFoot) //position 2 for left legs, HORIZONTAL position
 {
   float Va_angle;
   float Vb_angle;
@@ -123,5 +123,12 @@ void setup()
 void loop() 
 {
   MoveHip(PWM_left, chLeftLeg1_Hip, hip[0]);
-  Position1(PWM_left, chLeftLeg1_Knee, chLeftLeg1_Foot);
+  if(hip[0].direction==1)
+  {
+    Position1(PWM_left, chLeftLeg1_Knee, chLeftLeg1_Foot);
+  }
+  if(hip[0].direction==-1)
+  {
+    Position2(PWM_left, chLeftLeg1_Knee, chLeftLeg1_Foot);
+  }
 }
